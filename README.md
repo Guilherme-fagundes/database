@@ -6,9 +6,16 @@ This component connects, registers, reads, edits and deletes records in the data
 ##### Intalation
 
 ```bash
-
+composer require coffeebreaks/database
 ```
 
+or
+
+```bash
+"require": {
+    coffeebreaks/database:*
+}
+```
 
 ####Config
 
