@@ -1,15 +1,35 @@
 {
   "name": "coffeebraks/database",
   "description": "This component connects, registers, reads, edits and deletes records in the database",
+  "license": "MIT",
   "authors": [
     {
       "name": "Guilherme Fagundes",
       "role": "System Analist / Web Developer"
     }
   ],
+  "type": "library",
+  "keywords": ["Connect",
+    "Insert",
+    "Read",
+    "Delete",
+    "Update"
+  ],
   "autoload":{
     "psr-4": {
       "src\\": "src/"
     }
+  },
+  "require": {
+    "php": ">=7.1",
+    "ext-PDO": "*"
+  },
+  "extra": {
+    "frameworks": [
+      "laravel",
+      "symfony",
+      "codeigniter",
+      "zend"
+    ]
   }
 }
