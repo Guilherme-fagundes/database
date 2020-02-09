@@ -47,10 +47,20 @@ class Read
     }
 
     /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
      * @param $table
      * @param null $parse
      * @return array
      */
+
+
     public function full($table, $parse = null)
     {
         $this->table = (string)$table;

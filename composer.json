@@ -1,4 +1,12 @@
 {
+  "name": "coffeebraks/database",
+  "description": "This component connects, registers, reads, edits and deletes records in the database",
+  "authors": [
+    {
+      "name": "Guilherme Fagundes",
+      "role": "System Analist / Web Developer"
+    }
+  ],
   "autoload":{
     "psr-4": {
       "src\\": "src/"

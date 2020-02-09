@@ -6,11 +6,11 @@ namespace src;
 
 trait DB
 {
-    private static $host = 'localhost';
-    private static $user = 'root';
-    private static $pass = '';
-    private static $dbName = 'konmenager';
-    private static $dbDriver = 'mysql';
+    private static $host = DB['host'];
+    private static $user = DB['user'];
+    private static $pass = DB['pass'];
+    private static $dbName = DB['name'];
+    private static $dbDriver = DB['driver'];
 
     static $connect;
 
