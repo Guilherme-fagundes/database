@@ -69,7 +69,7 @@ class Read
         parse_str($parse, $this->statement);
         $this->read = DB::connect()->prepare("SELECT * FROM {$this->table}");
         $this->read->execute();
-        return $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
+        return $this->result = $this->read->fetchAll(\PDO::FETCH_ASSOC);
 
 
     }
@@ -85,12 +85,14 @@ class Read
         $this->table = $table;
         $this->terms = $terms;
 
-        parse_str($parse, $this->statement);
+        if ($parse){
+            parse_str($parse, $this->statement);
+        }
 
         try{
             $this->read = DB::connect()->prepare("SELECT * FROM {$this->table} {$this->terms}");
             $this->read->execute($this->statement);
-            return $this->result = $this->read->fetch(\PDO::FETCH_OBJ);
+            return $this->result = $this->read->fetchAll(\PDO::FETCH_ASSOC);
         }catch (\PDOException $e){
             echo $e->getMessage() ." in ".$e->getFile();
         }
