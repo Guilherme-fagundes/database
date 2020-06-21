@@ -1,9 +1,9 @@
 <?php
 
 
-namespace src;
+namespace database;
 
-use src\DB;
+use database\DB;
 
 /**
  * Class Read
@@ -37,6 +37,11 @@ class Read
      */
     private $result;
 
+    /**
+     * @var \PDOStatement
+     */
+    private $select;
+
 
     /**
      * Read constructor.
@@ -69,7 +74,7 @@ class Read
         parse_str($parse, $this->statement);
         $this->read = DB::connect()->prepare("SELECT * FROM {$this->table}");
         $this->read->execute();
-        return $this->result = $this->read->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
 
 
     }
@@ -85,17 +90,23 @@ class Read
         $this->table = $table;
         $this->terms = $terms;
 
-        if ($parse){
+        if ($parse) {
             parse_str($parse, $this->statement);
         }
 
-        try{
+        try {
             $this->read = DB::connect()->prepare("SELECT * FROM {$this->table} {$this->terms}");
             $this->read->execute($this->statement);
-            return $this->result = $this->read->fetchAll(\PDO::FETCH_ASSOC);
-        }catch (\PDOException $e){
-            echo $e->getMessage() ." in ".$e->getFile();
+            return $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
+        } catch (\PDOException $e) {
+            echo $e->getMessage() . " in " . $e->getFile();
         }
     }
+
+    public function getRowCount()
+    {
+        return $this->select->rowCount();
+    }
+
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace src;
+namespace database;
 
 
 trait DB
@@ -19,7 +19,8 @@ trait DB
     {
         try {
             $dsn = self::$dbDriver.":host=".self::$host.";dbname=".self::$dbName;
-            $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"];
+            $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ];
 
             self::$connect = new \PDO($dsn, self::$user, self::$pass, $options);
             self::$connect->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);

@@ -6,7 +6,7 @@
  * Time: 21:44
  */
 
-namespace src;
+namespace database;
 
 
 class Delete
