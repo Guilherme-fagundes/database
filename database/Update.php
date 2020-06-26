@@ -53,6 +53,16 @@ class Update
     }
 
     /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+
+
+    /**
      * @param string $table
      * @param array $data
      * @param string $terms
@@ -77,7 +87,7 @@ class Update
         try{
             $this->result = DB::connect()->prepare($this->update);
             $this->result->execute(array_merge($this->data, $this->statements));
-            $this->error = ['dado atualizado'];
+            $this->error = true;
 
 
         }catch (\PDOException $e){

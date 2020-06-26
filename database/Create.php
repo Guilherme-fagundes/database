@@ -20,6 +20,16 @@ class Create
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+
+
     public function create(string $table, array $data)
     {
         $this->data = $data;
@@ -44,6 +54,7 @@ class Create
             $this->statements = DB::connect()->prepare($this->create);
             $this->statements->execute($this->data);
             $this->result = DB::connect()->lastInsertId();
+            $this->error = true;
 
         }catch (\PDOException $e){
             echo $e->getMessage();

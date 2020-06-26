@@ -24,6 +24,16 @@ class Delete
     {
     }
 
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+
+
     public function delete(string $table, string $terms, string $parseString)
     {
         $this->table = $table;
