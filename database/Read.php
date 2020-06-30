@@ -42,6 +42,8 @@ class Read
      */
     private $select;
 
+    private $query;
+
 
     /**
      * Read constructor.
@@ -65,13 +67,28 @@ class Read
      * @return array
      */
 
+    public function query(string $query, string $parse = null)
+    {
+        if ($parse){
+            parse_str($parse, $this->statement);
 
-    public function full($table, $parse = null)
+        }
+
+        $this->query = $query;
+        $this->read = DB::connect()->prepare($this->query);
+        $this->read->execute($this->statement);
+        $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+    }
+
+    public function all($table)
     {
         $this->table = (string)$table;
 
 
-        parse_str($parse, $this->statement);
+
         $this->read = DB::connect()->prepare("SELECT * FROM {$this->table}");
         $this->read->execute();
         return $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
