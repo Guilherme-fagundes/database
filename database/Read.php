@@ -33,11 +33,10 @@ class Read
      */
     private $terms;
 
-    /**
-     * @var \PDOStatement
-     */
-    private $select;
 
+    /**
+     * @var
+     */
     private $query;
 
     /**
@@ -50,12 +49,32 @@ class Read
      */
     private $offset;
 
+    /**
+     * @var
+     */
     private $page;
+    /**
+     * @var
+     */
     private $link;
+    /**
+     * @var
+     */
     private $rows;
+    /**
+     * @var
+     */
     private $maxLinks;
+    /**
+     * @var
+     */
     private $first;
+    /**
+     * @var
+     */
     private $last;
+
+    private $paginator;
 
     /**
      * @var
@@ -95,12 +114,17 @@ class Read
         $this->query = $query;
         $this->read = DB::connect()->prepare($this->query);
         $this->read->execute($this->statement);
+        $this->rows = $this->read->rowCount();
         $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
         return $this;
 
 
     }
 
+    /**
+     * @param $table
+     * @return $this
+     */
     public function all($table)
     {
         $this->table = (string)$table;
@@ -108,7 +132,9 @@ class Read
 
         $this->read = DB::connect()->prepare("SELECT * FROM {$this->table}");
         $this->read->execute();
+        $this->rows = $this->read->rowCount();
         return $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
+
         return $this;
 
     }
@@ -131,6 +157,7 @@ class Read
         try {
             $this->read = DB::connect()->prepare("SELECT * FROM {$this->table} {$this->terms}");
             $this->read->execute($this->statement);
+            $this->rows = $this->read->rowCount();
             return $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
         } catch (\PDOException $e) {
             echo $e->getMessage() . " in " . $e->getFile();
@@ -139,29 +166,47 @@ class Read
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getRowCount()
     {
-        return $this->select->rowCount();
-        return $this;
+        return $this->rows;
+
     }
 
-    public function page(int $pag = null, int $limit)
+    /**
+     * @param int|null $pag
+     * @param int $limit
+     */
+    public function page(int $pag = null, int $limit, int $totalData)
     {
         $this->page = ($pag ? $pag : 1);
         $this->limit = $limit;
         $this->offset = ($this->page * $this->limit) - $this->limit;
+        $this->maxLinks = ceil($totalData / $this->limit);
 
         try {
 
             $this->read = DB::connect()->prepare("SELECT * FROM {$this->table} LIMIT {$this->limit} OFFSET {$this->offset}");
             $this->read->execute();
             $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
-        }catch (\PDOException $e){
+
+
+        } catch (\PDOException $e) {
             echo $e->getMessage() . " in " . $e->getFile();
 
         }
 
 
+    }
+
+    public function render()
+    {
+        for ($i = 1; $i <= $this->maxLinks; $i++){
+            echo "<a href=\"?atual={$i}\" class=\"paginator\">{$i}</a>";
+
+        }
     }
 
 
