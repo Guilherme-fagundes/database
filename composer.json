@@ -23,7 +23,8 @@
   },
   "require": {
     "php": ">=7.1",
-    "ext-PDO": "*"
+    "ext-PDO": "*",
+    "fzaninotto/faker": "^1.9"
   },
   "extra": {
     "frameworks": [

@@ -1,4 +1,4 @@
 /app
-.idea
+/.idea
 /vendor
-/test/
+/test/index.php
