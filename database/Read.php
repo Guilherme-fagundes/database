@@ -175,39 +175,6 @@ class Read
 
     }
 
-    /**
-     * @param int|null $pag
-     * @param int $limit
-     */
-    public function page(int $pag = null, int $limit, int $totalData)
-    {
-        $this->page = ($pag ? $pag : 1);
-        $this->limit = $limit;
-        $this->offset = ($this->page * $this->limit) - $this->limit;
-        $this->maxLinks = ceil($totalData / $this->limit);
-
-        try {
-
-            $this->read = DB::connect()->prepare("SELECT * FROM {$this->table} LIMIT {$this->limit} OFFSET {$this->offset}");
-            $this->read->execute();
-            $this->result = $this->read->fetchAll(\PDO::FETCH_OBJ);
-
-
-        } catch (\PDOException $e) {
-            echo $e->getMessage() . " in " . $e->getFile();
-
-        }
-
-
-    }
-
-    public function render()
-    {
-        for ($i = 1; $i <= $this->maxLinks; $i++){
-            echo "<a href=\"?atual={$i}\" class=\"paginator\">{$i}</a>";
-
-        }
-    }
 
 
 }
