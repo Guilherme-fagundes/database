@@ -4,7 +4,7 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Guilherme Fagundes",
+      "name": "Guilherme K. Fagundes",
       "role": "System Analist / Web Developer"
     }
   ],
@@ -14,17 +14,19 @@
     "Insert",
     "Read",
     "Delete",
-    "Update"
+    "Update",
+    "ORM",
+    "PHP ORM"
   ],
   "autoload":{
     "psr-4": {
-      "database\\": "database/"
+      "Database\\": "src/"
     }
   },
   "require": {
     "php": ">=7.1",
     "ext-PDO": "*",
-    "fzaninotto/faker": "^1.9"
+    "fakerphp/faker": "v1.13.0"
   },
   "extra": {
     "frameworks": [

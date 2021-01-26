@@ -19,15 +19,8 @@ This component connects, registers, reads, edits and deletes records in the data
 composer require coffeebreaks/database
 ```
 
-or
 
-```bash
-"require": {
-    coffeebreaks/database:*
-}
-```
-
-####Config
+#### Config
 
 <p>Connect with PDO</p>
 
@@ -36,7 +29,13 @@ define('DB', [
     'host' => 'localhost',
     'user' => 'root',
     'pass' => '',
-    'name' => '',
-    'driver' => 'mysql' //default = mysql
+    'name' => 'dbdebug',
+    'port' => 3306,
+    'driver' => 'mysql', //default = mysql
+    'options' => [
+        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+    ]
 ]);
 ```
