@@ -179,7 +179,8 @@ abstract class Database extends DB
 
             try {
                 $this->statements = $this->conn->prepare($this->sql);
-            $this->statements->execute($this->arrPlaces);
+                $this->statements->execute($this->arrPlaces);
+                $this->rowCount = $this->statements->rowCount();
 
             } catch (PDOException $ex) {
                 echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
@@ -192,8 +193,9 @@ abstract class Database extends DB
 
             try {
                 $this->statements = $this->conn->prepare($this->sql);
-            $this->statements->execute($this->data);
+                $this->statements->execute($this->data);
                 $this->lastInsertId = $this->conn->lastInsertId();
+                $this->rowCount = $this->statements->rowCount();
             } catch (PDOException $ex) {
                 echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
                 echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
