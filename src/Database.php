@@ -161,16 +161,45 @@ abstract class Database extends DB
     {
         $places = implode(', ', array_keys($this->data));
         $values = ':' . implode(', :', array_keys($this->data));
-        $this->sql = "INSERT INTO {$this->table} ({$places}) VALUES({$values})";
+        if (in_array($this->primary_key, array_keys($this->data))){
+            $unsetkey = array_search($this->primary_key, array_keys($this->data));
 
-        try {
-            $this->statements = $this->conn->prepare($this->sql);
+
+            foreach ($this->data as $keys => $values):
+                $data[] = $keys.' = :'.$keys;
+                unset($data[$unsetkey]);
+
+            endforeach;
+            $primary_key = $this->data[$this->primary_key];
+            $this->arrPlaces = $this->data;
+
+            $data = implode(', ', $data);
+
+            $this->sql = "UPDATE {$this->table} SET {$data} WHERE {$this->primary_key} = :{$this->primary_key}";
+
+            try {
+                $this->statements = $this->conn->prepare($this->sql);
+            $this->statements->execute($this->arrPlaces);
+
+            } catch (PDOException $ex) {
+                echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
+                echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
+            }
+
+
+        }else{
+            $this->sql = "INSERT INTO {$this->table} ({$places}) VALUES({$values})";
+
+            try {
+                $this->statements = $this->conn->prepare($this->sql);
             $this->statements->execute($this->data);
-            $this->lastInsertId = $this->conn->lastInsertId();
-        } catch (PDOException $ex) {
-            echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
-            echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
+                $this->lastInsertId = $this->conn->lastInsertId();
+            } catch (PDOException $ex) {
+                echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
+                echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
+            }
         }
+
 
     }
 
@@ -255,6 +284,37 @@ abstract class Database extends DB
         return $this;
 
     }
+
+
+    /**
+     * @param int|string $param
+     * @param array|null $parse
+     *
+     */
+    public function delete($param, array $parse = null)
+    {
+        if (is_int($param)){
+            $this->sql = "DELETE FROM {$this->table} WHERE {$this->primary_key} = :{$this->primary_key}";
+            $this->arrPlaces = [
+                $this->primary_key => $param
+            ];
+
+
+        }
+        try {
+            $this->statements = $this->conn->prepare($this->sql);
+            $this->statements->execute($this->arrPlaces);
+            $this->rowCount = $this->statements->rowCount();
+
+
+        } catch (PDOException $ex) {
+            echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
+            echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
+        }
+        return $this;
+
+    }
+
 
 
 }
