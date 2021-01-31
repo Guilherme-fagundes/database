@@ -45,7 +45,7 @@ abstract class Database extends DB
     /**
      * @var
      */
-    protected $perPage;
+    protected $totalPages;
 
     /**
      * @var
@@ -102,8 +102,9 @@ abstract class Database extends DB
 
     }
 
+
     /**
-     * @return mixed
+     * @return array
      */
     public function getGet()
     {
@@ -126,15 +127,6 @@ abstract class Database extends DB
     {
         return $this->limit;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getLinks()
-    {
-        return $this->links;
-    }
-
 
 
     /**
@@ -164,7 +156,6 @@ abstract class Database extends DB
     {
         return $this->rowCount;
     }
-
 
 
     /**
@@ -322,7 +313,6 @@ abstract class Database extends DB
 
     }
 
-
     /**
      * @param int|string $param
      * @param array|null $parse
@@ -364,8 +354,8 @@ abstract class Database extends DB
         $this->page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
         $this->page = (isset($this->page) ? $this->page : 1);
 
-        $totalPerPage = ceil($this->getRowCount() / $this->limit);
-        if ($this->page > $totalPerPage){
+        $this->totalPages = ceil($this->getRowCount() / $this->limit);
+        if ($this->page > $this->totalPages) {
             $this->page -= 1;
         }
 
@@ -385,13 +375,18 @@ abstract class Database extends DB
             echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
         }
 
-        for ($i=1; $i<=$totalPerPage; $i++){
-            echo $this->links = "<a class=\"pagination\" href=\"?page={$i}\">{$i}</a>";
-        }
-
 
         return $this;
 
+
+    }
+
+    public function links()
+    {
+        for ($i = 1; $i <= $this->totalPages; $i++){
+            echo "<a class=\"pagination\" href=\"?page=$i\">$i</a>";
+
+        }
     }
 
 
