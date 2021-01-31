@@ -127,6 +127,15 @@ abstract class Database extends DB
         return $this->limit;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLinks()
+    {
+        return $this->links;
+    }
+
+
 
     /**
      * @param $name
@@ -364,7 +373,6 @@ abstract class Database extends DB
 
         $this->sql .= " limit {$this->limit} OFFSET {$this->offset}";
 
-
         try {
             $this->statements = $this->conn->prepare($this->sql);
             $this->statements->execute();
@@ -376,6 +384,12 @@ abstract class Database extends DB
             echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
             echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
         }
+
+        for ($i=1; $i<=$totalPerPage; $i++){
+            echo $this->links = "<a class=\"pagination\" href=\"?page={$i}\">{$i}</a>";
+        }
+
+
         return $this;
 
     }
