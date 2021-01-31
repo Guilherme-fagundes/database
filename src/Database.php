@@ -16,6 +16,23 @@ abstract class Database extends DB
     /**
      * @var
      */
+    protected $rowCount;
+
+    /**
+     * @var
+     */
+    protected $offset;
+    /**
+     * @var
+     */
+    protected $limit;
+    /**
+     * @var
+     */
+    protected $page;
+    /**
+     * @var
+     */
     protected $findByEmail;
     /**
      * @var string
@@ -29,14 +46,7 @@ abstract class Database extends DB
      * @var
      */
     protected $perPage;
-    /**
-     * @var
-     */
-    protected $limit;
-    /**
-     * @var
-     */
-    protected $offset;
+
     /**
      * @var
      */
@@ -74,10 +84,6 @@ abstract class Database extends DB
      * @var
      */
     protected $get;
-    /**
-     * @var
-     */
-    protected $rowCount;
     /*
      * @var \PDOStatements
      * */
@@ -93,6 +99,7 @@ abstract class Database extends DB
     {
         $this->conn = parent::getConnect();
 
+
     }
 
     /**
@@ -103,6 +110,23 @@ abstract class Database extends DB
         return $this->get;
 
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
 
     /**
      * @param $name
@@ -125,12 +149,14 @@ abstract class Database extends DB
     }
 
     /**
-     * @return mixed
+     * @return $this
      */
     public function getRowCount()
     {
         return $this->rowCount;
     }
+
+
 
     /**
      * @return $this
@@ -161,12 +187,12 @@ abstract class Database extends DB
     {
         $places = implode(', ', array_keys($this->data));
         $values = ':' . implode(', :', array_keys($this->data));
-        if (in_array($this->primary_key, array_keys($this->data))){
+        if (in_array($this->primary_key, array_keys($this->data))) {
             $unsetkey = array_search($this->primary_key, array_keys($this->data));
 
 
             foreach ($this->data as $keys => $values):
-                $data[] = $keys.' = :'.$keys;
+                $data[] = $keys . ' = :' . $keys;
                 unset($data[$unsetkey]);
 
             endforeach;
@@ -188,7 +214,7 @@ abstract class Database extends DB
             }
 
 
-        }else{
+        } else {
             $this->sql = "INSERT INTO {$this->table} ({$places}) VALUES({$values})";
 
             try {
@@ -295,7 +321,7 @@ abstract class Database extends DB
      */
     public function delete($param, array $parse = null)
     {
-        if (is_int($param)){
+        if (is_int($param)) {
             $this->sql = "DELETE FROM {$this->table} WHERE {$this->primary_key} = :{$this->primary_key}";
             $this->arrPlaces = [
                 $this->primary_key => $param
@@ -317,6 +343,42 @@ abstract class Database extends DB
 
     }
 
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     */
+    public function paginate($limit = 15, $offset = 0)
+    {
+        $this->limit = $limit;
+        $this->offset = $offset;
+
+        $this->page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+        $this->page = (isset($this->page) ? $this->page : 1);
+
+        $totalPerPage = ceil($this->getRowCount() / $this->limit);
+        if ($this->page > $totalPerPage){
+            $this->page -= 1;
+        }
+
+        $this->offset = ($this->limit * $this->page) - $this->limit;
+
+        $this->sql .= " limit {$this->limit} OFFSET {$this->offset}";
+
+
+        try {
+            $this->statements = $this->conn->prepare($this->sql);
+            $this->statements->execute();
+            $this->rowCount = $this->statements->rowCount();
+            $this->get = $this->statements->fetchAll();
+
+
+        } catch (PDOException $ex) {
+            echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
+            echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
+        }
+        return $this;
+
+    }
 
 
 }

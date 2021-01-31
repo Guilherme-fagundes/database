@@ -1,5 +1,5 @@
 {
-  "name": "coffeebreaks/database",
+  "name": "coffeebreaks/database-ORM",
   "description": "This component connects, registers, reads, edits and deletes records in the database",
   "license": "MIT",
   "authors": [
