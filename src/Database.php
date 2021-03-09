@@ -383,10 +383,24 @@ abstract class Database extends DB
 
     public function links()
     {
-        for ($i = 1; $i <= $this->totalPages; $i++){
-            echo "<a class=\"pagination\" href=\"?page=$i\">$i</a>";
+        $maxLinks = 5;
+
+        for($i = $this->page - $maxLinks; $i <= $this->page - 1; $i++){
+            if ($i >= 1){
+                echo "<a href=\"?page={$i}\">$i</a>";
+            }
+
 
         }
+        echo "<span class=\"pagination active\">{$this->page}</span>";
+        for ($i = $this->page + 1; $i <= $this->page + $maxLinks; $i++){
+            if ($i <= $this->totalPages){
+                echo "<a href=\"?page={$i}\">$i</a>";
+            }
+        }
+
+
+
     }
 
 
