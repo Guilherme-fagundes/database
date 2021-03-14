@@ -39,3 +39,79 @@ define('DB', [
     ]
 ]);
 ```
+
+### Creating Model
+<p>In the folder <b>app/Models</b> create the class <b>Users</b></p>
+
+```php
+<?php
+
+
+namespace App\Models;
+
+
+use Database\Database;
+
+class Users extends Database
+{
+protected $table = "users";
+}
+```
+
+### Creating user
+
+```php
+use App\Models\Users;
+
+$user = new Users();
+
+$user->name = "Guilherme";
+$user->age = 26;
+
+$user->save();
+
+
+var_dump($user);
+```
+
+### Update user
+
+```php
+$user = new Users();
+$user->id = 1;
+$user->name = "Guilherme K.";
+$user->age = 26;
+
+$user->save();
+
+
+var_dump($user);
+```
+
+### List all datas
+
+```php
+$user = new Users();
+
+var_dump($user->all()->getGet());
+```
+
+### FindById
+
+```php
+$user = new Users();
+$user->findById(1);
+
+
+var_dump($user->getGet());
+```
+
+### FindByEmail
+
+```php
+$user = new Users();
+$user->findByEmail("email@email.com");
+
+
+var_dump($user->getGet());
+```

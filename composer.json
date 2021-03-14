@@ -1,5 +1,5 @@
 {
-  "name": "coffeebreaks/database-ORM",
+  "name": "coffeebreaks/database-orm",
   "description": "This component connects, registers, reads, edits and deletes records in the database",
   "license": "MIT",
   "authors": [
@@ -20,7 +20,8 @@
   ],
   "autoload":{
     "psr-4": {
-      "Database\\": "src/"
+      "Database\\": "src/",
+      "App\\": "app/"
     }
   },
   "autoload-dev": {
