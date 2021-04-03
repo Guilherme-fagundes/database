@@ -32,7 +32,8 @@
   "require": {
     "php": ">=7.1",
     "ext-PDO": "*",
-    "fakerphp/faker": "v1.13.0"
+    "fakerphp/faker": "v1.13.0",
+    "phpunit/phpunit": "^9.5"
   },
   "extra": {
     "frameworks": [

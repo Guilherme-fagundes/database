@@ -6,6 +6,7 @@ namespace Database;
 
 use PDO;
 use PDOException;
+use phpDocumentor\Reflection\Types\This;
 
 /**
  * Class Database
@@ -13,6 +14,10 @@ use PDOException;
  */
 abstract class Database extends DB
 {
+    /**
+     * @var
+     */
+    protected $orderBy;
     /**
      * @var
      */
@@ -91,6 +96,8 @@ abstract class Database extends DB
      * @var
      */
     protected $statements;
+
+
 
     /**
      * Database constructor.
@@ -342,6 +349,32 @@ abstract class Database extends DB
 
     }
 
+
+    /**
+     * @param array|string $orderBy
+     * @return $this
+     */
+    public function orderBy($orderBy): Database
+    {
+        $this->orderBy = $orderBy;
+
+        $this->sql .= " ORDER BY {$this->orderBy}";
+
+        try {
+            $this->statements = $this->conn->prepare($this->sql);
+            $this->statements->execute();
+            $this->rowCount = $this->statements->rowCount();
+            $this->get = $this->statements->fetchAll();
+
+
+        } catch (PDOException $ex) {
+            echo "<p>Error:: {$ex->getCode()} | Message:: {$ex->getMessage()}</p>";
+            echo "<p>FILE:: {$ex->getFile()} | LINE {$ex->getLine()}</p>";
+        }
+        return $this;
+
+    }
+
     /**
      * @param int|null $limit
      * @param int|null $offset
@@ -381,24 +414,26 @@ abstract class Database extends DB
 
     }
 
+    /**
+     *
+     */
     public function links()
     {
         $maxLinks = 5;
 
-        for($i = $this->page - $maxLinks; $i <= $this->page - 1; $i++){
-            if ($i >= 1){
+        for ($i = $this->page - $maxLinks; $i <= $this->page - 1; $i++) {
+            if ($i >= 1) {
                 echo "<a href=\"?page={$i}\">$i</a>";
             }
 
 
         }
         echo "<span class=\"pagination active\">{$this->page}</span>";
-        for ($i = $this->page + 1; $i <= $this->page + $maxLinks; $i++){
-            if ($i <= $this->totalPages){
+        for ($i = $this->page + 1; $i <= $this->page + $maxLinks; $i++) {
+            if ($i <= $this->totalPages) {
                 echo "<a href=\"?page={$i}\">$i</a>";
             }
         }
-
 
 
     }
