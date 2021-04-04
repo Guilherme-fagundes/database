@@ -115,3 +115,11 @@ $user->findByEmail("email@email.com");
 
 var_dump($user->getGet());
 ```
+
+### orderBy
+
+```php
+$user = new Users();
+
+var_dump($user->all()->orderBy('collumn ASC'));
+```
